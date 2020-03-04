@@ -1,0 +1,44 @@
+{
+  "name": "csnf",
+  "version": "1.0.0",
+  "description": "a parser and generator for CLIP STUDIO name files.",
+  "author": "funige <funigedev@gmail.com>",
+  "dependencies": {
+    "bl": "^3.0.0",
+    "color-parse": "^1.3.8",
+    "commander": "^4.0.1",
+    "concat-stream": "^2.0.0",
+    "end-of-stream": "^1.4.1",
+    "fs-constants": "^1.0.0",
+    "inherits": "^2.0.3",
+    "jszip": "^3.2.2",
+    "readable-stream": "^3.1.1"
+  },
+  "devDependencies": {
+    "standard": "^12.0.1",
+    "tape": "^4.9.2"
+  },
+  "scripts": {
+    "test": "standard && tape test/*.js"
+  },
+  "bugs": {
+    "url": "https://github.com/funige/csnf/issues"
+  },
+  "homepage": "https://github.com/funige/csnf",
+  "main": "index.js",
+  "files": [
+    "*.js",
+    "LICENSE"
+  ],
+  "directories": {
+    "test": "test"
+  },
+  "license": "ISC",
+  "bin": {
+    "csnfdump": "./dump.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/funige/csnf.git"
+  }
+}
