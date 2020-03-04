@@ -27,16 +27,18 @@ var _dump = async function (file, filter) {
 
           if (program.long) {
             console.log('header=>', layer.header.rawHeader)
+            let width, height
+            
             switch (layer.header.type) {
-              case 'bitmap':
-                const width = layer.data[0] + layer.data[1] * 0x100
-                const height = layer.data[2] + layer.data[3] * 0x100
+              case 'bitmap': 
+                width = layer.data[0] + layer.data[1] * 0x100
+                height = layer.data[2] + layer.data[3] * 0x100
                 console.log(`data=> bitmap ${width}x${height}`)
                 break
 
               case 'text':
               case 'shape':
-                console.log(`data=>`, layer.data)
+                console.log('data=>', layer.data)
                 break
             }
             console.log('\n')

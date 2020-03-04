@@ -45,13 +45,13 @@ test('layer test', async function (t) {
   var p3 = [x, y + frame[1]]
 
   page.addTextLayer([
-    [ 5, ...p1, 11, 0, 0, true, 'vertical text' ]
+    [5, ...p1, 11, 0, 0, true, 'vertical text']
   ])
 
   page.addFrameLayer([
-    [ 1, 4, ...p0, ...p2 ], // line
-    [ 2, 4, ...p0, ...p1, ...p2, ...p3 ], // rectangle
-    [ 4, 4, 5, 291, 837, 184, 796, 235, 721, 314, 726, 331, 807 ] // polygon
+    [1, 4, ...p0, ...p2], // line
+    [2, 4, ...p0, ...p1, ...p2, ...p3], // rectangle
+    [4, 4, 5, 291, 837, 184, 796, 235, 721, 314, 726, 331, 807] // polygon
   ])
 
   var tmp = 'layer_test.csnf'
@@ -70,9 +70,9 @@ test('slot test', async function (t) {
   var csnf = new CSNF()
   var page = csnf.addPage()
 
-  page.addTextLayer([ [ 5, 100, 30, 11, 0, 0, false, 'test' ] ])
-  page.addTextLayer([ [ 5, 200, 30, 11, 0, 0, false, 'test' ] ], 1)
-  page.addTextLayer([ [ 5, 300, 30, 11, 0, 0, false, 'test' ] ], 2)
+  page.addTextLayer([[5, 100, 30, 11, 0, 0, false, 'test']])
+  page.addTextLayer([[5, 200, 30, 11, 0, 0, false, 'test']], 1)
+  page.addTextLayer([[5, 300, 30, 11, 0, 0, false, 'test']], 2)
 
   t.equal(page.layers.length, 3)
   var tmp = 'slot_test.csnf'
@@ -131,19 +131,19 @@ test('set bindRight and startpageRight', async function (t) {
   t.equal(csnf.story.startpage_right, false)
 
   t.equal(csnf.story.pageinfo_count, 2)
-  t.deepEqual(csnf.story.pageinfo, [ [ 0, 1, p1, 0, 0 ], [ 0, 3, p3, 2, p2 ] ])
+  t.deepEqual(csnf.story.pageinfo, [[0, 1, p1, 0, 0], [0, 3, p3, 2, p2]])
 
   csnf.setBindRight(false)
   t.equal(csnf.story.pageinfo_count, 2)
-  t.deepEqual(csnf.story.pageinfo, [ [ 0, 1, p1, 2, p2 ], [ 0, 3, p3, 0, 0 ] ])
+  t.deepEqual(csnf.story.pageinfo, [[0, 1, p1, 2, p2], [0, 3, p3, 0, 0]])
 
   csnf.setStartpageRight(true)
   t.equal(csnf.story.pageinfo_count, 2)
-  t.deepEqual(csnf.story.pageinfo, [ [ 0, 0, 0, 1, p1 ], [ 0, 2, p2, 3, p3 ] ])
+  t.deepEqual(csnf.story.pageinfo, [[0, 0, 0, 1, p1], [0, 2, p2, 3, p3]])
 
   csnf.setBindRight(true)
   t.equal(csnf.story.pageinfo_count, 2)
-  t.deepEqual(csnf.story.pageinfo, [ [ 0, 2, p2, 1, p1 ], [ 0, 0, 0, 3, p3 ] ])
+  t.deepEqual(csnf.story.pageinfo, [[0, 2, p2, 1, p1], [0, 0, 0, 3, p3]])
 })
 
 test('csnf read', async function (t) {
