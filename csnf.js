@@ -371,6 +371,37 @@ CSNF.prototype.removeRawHeader = function () {
   return this
 }
 
+CSNF.prototype.text = function (p, fontSize, align, emphasis, vertical, str) {
+  return [5, p[0], p[1], fontSize, align, emphasis, vertical, str]
+}
+
+CSNF.prototype.line = function (lineWidth, p, q) {
+  return [1, lineWidth, p[0], p[1], q[0], q[1]]
+}
+
+CSNF.prototype.rectangle = function (lineWidth, p, q, r, s) {
+  return [2, lineWidth, p[0], p[1], q[0], q[1], r[0], r[1], s[0], s[1]]
+}
+
+CSNF.prototype.polygon = function (lineWidth, ...args) {
+  var length = args.length
+  var result = [4, lineWidth, length]
+  args.forEach(arg => {
+    result.push(arg[0], arg[1])
+  })
+  return result
+}
+
+CSNF.prototype.bitmap = function (width, height, data) {
+  var result = new Uint8Array(data.length + 4)
+  result[0] = width % 0x100
+  result[1] = width / 0x100
+  result[2] = height % 0x100
+  result[3] = height / 0x100
+  result.set(data, 4)
+  return result
+}
+
 // constants and class methods
 
 CSNF.FRAME = 0

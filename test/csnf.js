@@ -10,7 +10,6 @@ test('layer test', async function (t) {
   var page = csnf.addPage()
 
   var drawData = Uint8Array.of(
-    8, 0, 8, 0,
     255, 255, 255, 255, 255, 255, 255, 255,
     255, 0, 0, 0, 0, 255, 255, 255,
     255, 0, 255, 255, 255, 0, 255, 255,
@@ -20,10 +19,9 @@ test('layer test', async function (t) {
     255, 0, 0, 0, 0, 255, 255, 255,
     128, 255, 255, 255, 255, 255, 255, 255
   )
-  page.addDrawLayer(drawData)
+  page.addDrawLayer(csnf.bitmap(8, 8, drawData))
 
   var noteData = Uint8Array.of(
-    8, 0, 8, 0,
     255, 255, 255, 255, 255, 255, 255, 255,
     255, 0, 255, 255, 255, 255, 0, 255,
     255, 0, 0, 255, 255, 255, 0, 255,
@@ -33,7 +31,7 @@ test('layer test', async function (t) {
     255, 0, 255, 255, 255, 255, 0, 255,
     128, 255, 255, 255, 255, 255, 255, 255
   )
-  page.addNoteLayer(noteData)
+  page.addNoteLayer(csnf.bitmap(8, 8, noteData))
 
   var frame = csnf.mm2px(csnf.story.baseframe_size)
   var sheet = csnf.mm2px(csnf.story.sheet_size)
@@ -44,14 +42,17 @@ test('layer test', async function (t) {
   var p2 = [x + frame[0], y + frame[1]]
   var p3 = [x, y + frame[1]]
 
+  var fontSize = 11
+  var vertical = true
   page.addTextLayer([
-    [5, ...p1, 11, 0, 0, true, 'vertical text']
+    csnf.text(p1, fontSize, 0, 0, vertical, 'vertical text')
   ])
 
+  var w = 4
   page.addFrameLayer([
-    [1, 4, ...p0, ...p2], // line
-    [2, 4, ...p0, ...p1, ...p2, ...p3], // rectangle
-    [4, 4, 5, 291, 837, 184, 796, 235, 721, 314, 726, 331, 807] // polygon
+    csnf.line(w, p0, p2),
+    csnf.rectangle(w, p0, p1, p2, p3),
+    csnf.polygon(w, [291, 837], [184, 796], [235, 721], [314, 726], [331, 807])
   ])
 
   var tmp = 'layer_test.csnf'
@@ -70,9 +71,9 @@ test('slot test', async function (t) {
   var csnf = new CSNF()
   var page = csnf.addPage()
 
-  page.addTextLayer([[5, 100, 30, 11, 0, 0, false, 'test']])
-  page.addTextLayer([[5, 200, 30, 11, 0, 0, false, 'test']], 1)
-  page.addTextLayer([[5, 300, 30, 11, 0, 0, false, 'test']], 2)
+  page.addTextLayer([csnf.text([100, 30], 11, 0, 0, false, 'test')])
+  page.addTextLayer([csnf.text([200, 30], 11, 0, 0, false, 'test')], 1)
+  page.addTextLayer([csnf.text([300, 30], 11, 0, 0, false, 'test')], 2)
 
   t.equal(page.layers.length, 3)
   var tmp = 'slot_test.csnf'
@@ -144,6 +145,37 @@ test('set bindRight and startpageRight', async function (t) {
   csnf.setBindRight(true)
   t.equal(csnf.story.pageinfo_count, 2)
   t.deepEqual(csnf.story.pageinfo, [[0, 2, p2, 1, p1], [0, 0, 0, 3, p3]])
+})
+
+test('convenient methods', function (t) {
+  t.plan(5)
+
+  var csnf = new CSNF()
+  t.deepEqual(
+    csnf.bitmap(3, 2, Uint8Array.of(100, 101, 102, 200, 201, 202)),
+    Uint8Array.of(3, 0, 2, 0, 100, 101, 102, 200, 201, 202)
+  )
+  var p = [100, 101]
+  var q = [200, 201]
+  var r = [300, 301]
+  var s = [400, 401]
+  var u = [500, 501]
+  t.deepEqual(
+    csnf.line(4, p, q),
+    [1, 4, ...p, ...q]
+  )
+  t.deepEqual(
+    csnf.rectangle(4, p, q, r, s),
+    [2, 4, ...p, ...q, ...r, ...s]
+  )
+  t.deepEqual(
+    csnf.polygon(4, p, q, r, s, u),
+    [4, 4, 5, ...p, ...q, ...r, ...s, ...u]
+  )
+  t.deepEqual(
+    csnf.text(p, 12, 0, 0, true, 'text'),
+    [5, ...p, 12, 0, 0, true, 'text']
+  )
 })
 
 test('csnf read', async function (t) {

@@ -1,6 +1,6 @@
 {
   "name": "csnf",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "a parser and generator for CLIP STUDIO name files.",
   "author": "funige <funigedev@gmail.com>",
   "dependencies": {
@@ -28,6 +28,7 @@
   "main": "index.js",
   "files": [
     "*.js",
+    "tar-stream/*.js",
     "LICENSE"
   ],
   "directories": {
