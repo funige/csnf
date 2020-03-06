@@ -7,6 +7,11 @@ var CSNFPage = function (pid) {
 }
 
 CSNFPage.prototype.addLayer = function (header, data) {
+  this.layers.forEach(layer => {
+    if (layer.header.name === header.name) {
+      throw new Error('Duplicated layer name')
+    }
+  })
   var layer = new CSNFLayer(header, data)
   this.layers.push(layer)
   return layer

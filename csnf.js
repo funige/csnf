@@ -45,7 +45,7 @@ CSNF.prototype.read = function (data) {
       stream.pipe(concat((rawData) => {
         if (header.isLayer()) {
           if (!currentPage || currentPage.pid !== header.pid) {
-            throw new Error('invalid format')
+            throw new Error('Invalid format')
           }
         }
 
@@ -249,7 +249,7 @@ CSNF.prototype.initStory = function (opts) {
         break
 
       default:
-        throw new Error('unknown opts')
+        throw new Error('Unknown opts')
     }
   }
 }
@@ -281,7 +281,7 @@ CSNF.prototype.setColor = function (value, index) {
       var g = ('0' + rgb.values[1].toString(16)).slice(-2)
       var b = ('0' + rgb.values[2].toString(16)).slice(-2)
       return parseInt('0x' + r + g + b) - 0x1000000
-    } else throw new Error()
+    } else throw new Error('Unknown color format')
   })
   return this
 }
