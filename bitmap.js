@@ -30,8 +30,6 @@ CSNFBitmap.extract = function (data) {
 }
 
 CSNFBitmap.fromCanvas = function (canvas, scale = 1.0) {
-  console.log('from canvas')
-
   var width = canvas.width
   var height = canvas.height
   var bitmapWidth = Math.round(width * scale)

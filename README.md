@@ -14,7 +14,7 @@ npm install csnf
 ``` js
 import { CSNF } from 'csnf'
 
-var csnf = new CSNF({ template: 'b4' })
+var csnf = new CSNF({ template: 'B4' })
 var page = csnf.addPage()
 
 // CSNF has 4 layer types (Frame, Draw, Text, Note),
@@ -44,7 +44,7 @@ var p3 = [x, y + frame[1]]
 var fontSize = 11
 var vertical = true
 page.addTextLayer([
-  csnf.text(p1, fontSize, 0, 0, vertical, 'vertical text')
+  csnf.text(p1, fontSize, 0, 0, vertical, 'vertical\ntext')
 ])
 
 var w = 4
