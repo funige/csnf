@@ -345,18 +345,27 @@ CSNF.prototype.setStartpageRight = function (value) {
   return this
 }
 
-CSNF.prototype.mm2px = function (mm) {
-  if (typeof mm === 'number') {
-    return Math.floor(mm * (this.dpi / 25.4))
-  }
-  return mm.map((x) => Math.floor(x * (this.story.dpi / 25.4)))
+// convenient methods
+
+CSNF.prototype.sheetRect = function () {
+  var sheet = this.mm2px(this.story.sheet_size)
+  return { x: 0, y: 0, width: sheet[0], height: sheet[1] }
 }
 
-CSNF.prototype.px2mm = function (px) {
-  if (typeof px === 'number') {
-    return px * (25.4 / this.story.dpi)
-  }
-  return px.map((x) => x * (25.4 / this.dpi))
+CSNF.prototype.finishingRect = function () {
+  var sheet = this.mm2px(this.story.sheet_size)
+  var finishing = this.mm2px(this.story.finishing_size)
+  var left = (sheet[0] - finishing[0]) / 2
+  var top = (sheet[1] - finishing[1]) / 2
+  return { x: left, y: top, width: finishing[0], height: finishing[1] }
+}
+
+CSNF.prototype.baseframeRect = function () {
+  var sheet = this.mm2px(this.story.sheet_size)
+  var baseframe = this.mm2px(this.story.baseframe_size)
+  var left = (sheet[0] - baseframe[0]) / 2
+  var top = (sheet[1] - baseframe[1]) / 2
+  return { x: left, y: top, width: baseframe[0], height: baseframe[1] }
 }
 
 CSNF.prototype.removeRawHeader = function () {
@@ -369,6 +378,20 @@ CSNF.prototype.removeRawHeader = function () {
     }
   }
   return this
+}
+
+CSNF.prototype.mm2px = function (mm) {
+  if (typeof mm === 'number') {
+    return Math.floor(mm * (this.dpi / 25.4))
+  }
+  return mm.map((x) => Math.floor(x * (this.story.dpi / 25.4)))
+}
+
+CSNF.prototype.px2mm = function (px) {
+  if (typeof px === 'number') {
+    return px * (25.4 / this.story.dpi)
+  }
+  return px.map((x) => Math.round(x * (25.4 / this.story.dpi)))
 }
 
 CSNF.prototype.text = function (p, fontSize, align, emphasis, vertical, str) {

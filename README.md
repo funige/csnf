@@ -32,14 +32,11 @@ var drawData = Uint8Array.of(
 )
 page.addDrawLayer(csnf.bitmap(8, 8, drawData))
 
-var frame = csnf.mm2px(csnf.story.baseframe_size)
-var sheet = csnf.mm2px(csnf.story.sheet_size)
-var x = (sheet[0] - frame[0]) / 2
-var y = (sheet[1] - frame[1]) / 2
-var p0 = [x, y]
-var p1 = [x + frame[0], y]
-var p2 = [x + frame[0], y + frame[1]]
-var p3 = [x, y + frame[1]]
+var frame = csnf.baseframeRect()
+var p0 = [frame.x, frame.y]
+var p1 = [frame.x + frame.width, frame.y]
+var p2 = [frame.x + frame.width, frame.y + frame.height]
+var p3 = [frame.x, frame.y + frame.height]
 
 var fontSize = 11
 var vertical = true

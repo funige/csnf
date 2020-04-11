@@ -78,4 +78,32 @@ CSNFBitmap.toCanvas = function (bitmap) {
   return canvas
 }
 
+CSNFBitmap.fromNdarray = function (pixels) {
+  var bitmapWidth = pixels.shape[0]
+  var bitmapHeight = pixels.shape[1]
+
+  var bitmap = new Uint8Array(bitmapWidth * bitmapHeight + 4)
+  bitmap[0] = bitmapWidth % 0x100
+  bitmap[1] = Math.floor(bitmapWidth / 0x100)
+  bitmap[2] = bitmapHeight % 0x100
+  bitmap[3] = Math.floor(bitmapHeight / 0x100)
+
+  var src = 0
+  var dst = 4
+  var m = pixels.data
+  for (var y = 0; y < bitmapHeight; y++) {
+    for (var x = 0; x < bitmapWidth; x++) {
+      var r = m[src + 0]
+      var g = m[src + 1]
+      var b = m[src + 2]
+      var a = m[src + 3]
+      var i = ((0xff - r) + (0xff - g) + (0xff - b)) / 3.0
+      bitmap[dst] = i * (a / 0xff)
+      dst += 1
+      src += 4
+    }
+  }
+  return bitmap
+}
+
 module.exports = CSNFBitmap

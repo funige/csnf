@@ -33,14 +33,11 @@ test('layer test', async function (t) {
   )
   page.addNoteLayer(csnf.bitmap(8, 8, noteData))
 
-  var frame = csnf.mm2px(csnf.story.baseframe_size)
-  var sheet = csnf.mm2px(csnf.story.sheet_size)
-  var x = (sheet[0] - frame[0]) / 2
-  var y = (sheet[1] - frame[1]) / 2
-  var p0 = [x, y]
-  var p1 = [x + frame[0], y]
-  var p2 = [x + frame[0], y + frame[1]]
-  var p3 = [x, y + frame[1]]
+  var frame = csnf.baseframeRect()
+  var p0 = [frame.x, frame.y]
+  var p1 = [frame.x + frame.width, frame.y]
+  var p2 = [frame.x + frame.width, frame.y + frame.height]
+  var p3 = [frame.x, frame.y + frame.height]
 
   var fontSize = 11
   var vertical = true
@@ -148,13 +145,26 @@ test('set bindRight and startpageRight', async function (t) {
 })
 
 test('convenient methods', function (t) {
-  t.plan(5)
+  t.plan(9)
 
-  var csnf = new CSNF()
+  var csnf = new CSNF({ template: 'B4' })
   t.deepEqual(
-    csnf.bitmap(3, 2, Uint8Array.of(100, 101, 102, 200, 201, 202)),
-    Uint8Array.of(3, 0, 2, 0, 100, 101, 102, 200, 201, 202)
+    csnf.sheetRect(),
+    { x: 0, y: 0, width: 728, height: 1031 }
   )
+  t.deepEqual(
+    csnf.finishingRect(),
+    { x: 52.5, y: 76.5, width: 623, height: 878 }
+  )
+  t.deepEqual(
+    csnf.baseframeRect(),
+    { x: 109, y: 133, width: 510, height: 765 }
+  )
+  t.deepEqual(
+    csnf.px2mm(csnf.mm2px([100, 200])),
+    [100, 200]
+  )
+
   var p = [100, 101]
   var q = [200, 201]
   var r = [300, 301]
@@ -173,8 +183,12 @@ test('convenient methods', function (t) {
     [4, 4, 5, ...p, ...q, ...r, ...s, ...u]
   )
   t.deepEqual(
-    csnf.text(p, 12, 0, 0, true, 'text'),
-    [5, ...p, 12, 0, 0, true, 'text']
+    csnf.text(p, 12, 13, 14, true, 'text'),
+    [5, ...p, 12, 13, 14, true, 'text']
+  )
+  t.deepEqual(
+    csnf.bitmap(3, 2, Uint8Array.of(100, 101, 102, 200, 201, 202)),
+    Uint8Array.of(3, 0, 2, 0, 100, 101, 102, 200, 201, 202)
   )
 })
 
