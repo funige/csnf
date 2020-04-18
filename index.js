@@ -1,2 +1,2 @@
-exports.CSNF = require('./csnf')
+exports.CSNFDocument = require('./document')
 exports.CSNFBitmap = require('./bitmap')

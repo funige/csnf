@@ -12,7 +12,7 @@ npm install csnf
 ## Usage
 
 ``` js
-import { CSNF } from 'csnf'
+var CSNF = require('csnf')
 
 var csnf = new CSNF({ template: 'B4' })
 var page = csnf.addPage()
@@ -32,16 +32,16 @@ var drawData = Uint8Array.of(
 )
 page.addDrawLayer(csnf.bitmap(8, 8, drawData))
 
-var frame = csnf.baseframeRect()
-var p0 = [frame.x, frame.y]
-var p1 = [frame.x + frame.width, frame.y]
-var p2 = [frame.x + frame.width, frame.y + frame.height]
-var p3 = [frame.x, frame.y + frame.height]
+var rect = csnf.baseframeRect()
+var p0 = [rect.x, rect.y]
+var p1 = [rect.x + rect.width, rect.y]
+var p2 = [rect.x + rect.width, rect.y + rect.height]
+var p3 = [rect.x, rect.y + rect.height]
 
 var fontSize = 11
 var vertical = true
 page.addTextLayer([
-  csnf.text(p1, fontSize, 0, 0, vertical, 'vertical\ntext')
+  csnf.text(p1, fontSize, vertical, 'vertical\ntext')
 ])
 
 var w = 4

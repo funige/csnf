@@ -29,6 +29,18 @@ CSNFBitmap.extract = function (data) {
   })
 }
 
+CSNFBitmap.toCanvas = function (bitmap) {
+  var canvas = document.createElement('canvas')
+  canvas.width = bitmap[0] + bitmap[1] * 0x100
+  canvas.height = bitmap[2] + bitmap[3] * 0x100
+
+  var ctx = canvas.getContext('2d')
+  var imageData = ctx.createImageData(canvas.width, canvas.height)
+  imageData.data.set(bitmap + 4)
+  ctx.putImageData(imageData, 0, 0)
+  return canvas
+}
+
 CSNFBitmap.fromCanvas = function (canvas, scale = 1.0) {
   var width = canvas.width
   var height = canvas.height
@@ -64,18 +76,6 @@ CSNFBitmap.fromCanvas = function (canvas, scale = 1.0) {
     }
   }
   return bitmap
-}
-
-CSNFBitmap.toCanvas = function (bitmap) {
-  var canvas = document.createElement('canvas')
-  canvas.width = bitmap[0] + bitmap[1] * 0x100
-  canvas.height = bitmap[2] + bitmap[3] * 0x100
-
-  var ctx = canvas.getContext('2d')
-  var imageData = ctx.createImageData(canvas.width, canvas.height)
-  imageData.data.set(bitmap + 4)
-  ctx.putImageData(imageData, 0, 0)
-  return canvas
 }
 
 CSNFBitmap.fromNdarray = function (pixels) {

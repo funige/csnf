@@ -255,19 +255,19 @@ CSNF.prototype.initStory = function (opts) {
 }
 
 CSNF.prototype.setFrameColor = function (value) {
-  return this.setColor(value, CSNF.FRAME)
+  return this.setColor(value, this.FRAME)
 }
 
 CSNF.prototype.setDrawColor = function (value) {
-  return this.setColor(value, CSNF.DRAW)
+  return this.setColor(value, this.DRAW)
 }
 
 CSNF.prototype.setTextColor = function (value) {
-  return this.setColor(value, CSNF.TEXT)
+  return this.setColor(value, this.TEXT)
 }
 
 CSNF.prototype.setNoteColor = function (value) {
-  return this.setColor(value, CSNF.NOTE)
+  return this.setColor(value, this.NOTE)
 }
 
 CSNF.prototype.setColor = function (value, index) {
@@ -394,8 +394,10 @@ CSNF.prototype.px2mm = function (px) {
   return px.map((x) => Math.round(x * (25.4 / this.story.dpi)))
 }
 
-CSNF.prototype.text = function (p, fontSize, align, emphasis, vertical, str) {
-  return [5, p[0], p[1], fontSize, align, emphasis, vertical, str]
+CSNF.prototype.text = function (p, fontSize, vertical, str, flag = 0) {
+  var f1 = 0
+  var f2 = flag & (this.BOLD | this.ITALIC)
+  return [5, p[0], p[1], fontSize, f1, f2, vertical, str]
 }
 
 CSNF.prototype.line = function (lineWidth, p, q) {
@@ -425,16 +427,16 @@ CSNF.prototype.bitmap = function (width, height, data) {
   return result
 }
 
-// constants and class methods
+CSNF.Bitmap = CSNFBitmap
 
-CSNF.FRAME = 0
-CSNF.DRAW = 1
-CSNF.TEXT = 2
-CSNF.NOTE = 3
+// layer type
+CSNF.prototype.FRAME = 0
+CSNF.prototype.DRAW = 1
+CSNF.prototype.TEXT = 2
+CSNF.prototype.NOTE = 3
 
-CSNF.createFromFile = async function (path) {
-  var csnf = new CSNF()
-  return csnf.readFile(path)
-}
+// text type
+CSNF.prototype.BOLD = 1
+CSNF.prototype.ITALIC = 2
 
 module.exports = CSNF

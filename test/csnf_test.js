@@ -42,7 +42,7 @@ test('layer test', async function (t) {
   var fontSize = 11
   var vertical = true
   page.addTextLayer([
-    csnf.text(p1, fontSize, 0, 0, vertical, 'vertical text')
+    csnf.text(p1, fontSize, vertical, 'vertical text')
   ])
 
   var w = 4
@@ -68,9 +68,9 @@ test('slot test', async function (t) {
   var csnf = new CSNF()
   var page = csnf.addPage()
 
-  page.addTextLayer([csnf.text([100, 30], 11, 0, 0, false, 'test')])
-  page.addTextLayer([csnf.text([200, 30], 11, 0, 0, false, 'test')], 1)
-  page.addTextLayer([csnf.text([300, 30], 11, 0, 0, false, 'test')], 2)
+  page.addTextLayer([csnf.text([100, 30], 11, false, 'test')])
+  page.addTextLayer([csnf.text([200, 30], 11, false, 'test')], 1)
+  page.addTextLayer([csnf.text([300, 30], 11, false, 'test')], 2)
 
   t.equal(page.layers.length, 3)
   var tmp = 'slot_test.csnf'
@@ -109,8 +109,8 @@ test('set color', function (t) {
     frameColor: ['#86ae00', '#00a000', 'black'],
     drawColor: '#0097d4'
   })
-  t.deepEqual(csnf.story.layer_color[CSNF.FRAME], [-7950848, -16736256, -16777216])
-  t.deepEqual(csnf.story.layer_color[CSNF.DRAW], [-16738348])
+  t.deepEqual(csnf.story.layer_color[csnf.FRAME], [-7950848, -16736256, -16777216])
+  t.deepEqual(csnf.story.layer_color[csnf.DRAW], [-16738348])
 })
 
 test('set bindRight and startpageRight', async function (t) {
@@ -183,8 +183,8 @@ test('convenient methods', function (t) {
     [4, 4, 5, ...p, ...q, ...r, ...s, ...u]
   )
   t.deepEqual(
-    csnf.text(p, 12, 13, 14, true, 'text'),
-    [5, ...p, 12, 13, 14, true, 'text']
+    csnf.text(p, 12, true, 'text', csnf.BOLD),
+    [5, ...p, 12, 0, 1, true, 'text']
   )
   t.deepEqual(
     csnf.bitmap(3, 2, Uint8Array.of(100, 101, 102, 200, 201, 202)),
