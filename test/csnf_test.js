@@ -48,7 +48,7 @@ test('layer test', async function (t) {
   var w = 4
   page.addFrameLayer([
     csnf.line(w, p0, p2),
-    csnf.rectangle(w, p0, p1, p2, p3),
+    csnf.polygon(w, p0, p1, p2, p3),
     csnf.polygon(w, [291, 837], [184, 796], [235, 721], [314, 726], [331, 807])
   ])
 
@@ -175,7 +175,7 @@ test('convenient methods', function (t) {
     [1, 4, ...p, ...q]
   )
   t.deepEqual(
-    csnf.rectangle(4, p, q, r, s),
+    csnf.polygon(4, p, q, r, s),
     [2, 4, ...p, ...q, ...r, ...s]
   )
   t.deepEqual(

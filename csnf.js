@@ -217,10 +217,10 @@ CSNF.prototype.initStory = function (opts) {
     story_id: 1,
     version: 1,
     layer_color: [
-      [-7950848, -16736256, -16777216],
-      [-16738348, -16777056, -16777216],
-      [-4259752, -6291456, -16777216],
-      [-1918976, -6250496, -16777216]
+      [-7950848, -16736256, -16777216],  // #86ae00, #00a000, #000000 (Frame)
+      [-16738348, -16777056, -16777216], // #0097d4, #0000a0, #000000 (Draw)
+      [-4259752, -6291456, -16777216],   // #bf0058, #a00000, #000000 (Text)
+      [-1918976, -6250496, -16777216]    // #e2b800, #a0a000, #000000 (Note)
     ]
   }
 
@@ -404,13 +404,10 @@ CSNF.prototype.line = function (lineWidth, p, q) {
   return [1, lineWidth, p[0], p[1], q[0], q[1]]
 }
 
-CSNF.prototype.rectangle = function (lineWidth, p, q, r, s) {
-  return [2, lineWidth, p[0], p[1], q[0], q[1], r[0], r[1], s[0], s[1]]
-}
-
 CSNF.prototype.polygon = function (lineWidth, ...args) {
   var length = args.length
-  var result = [4, lineWidth, length]
+  var result = (length === 4) ? [2, lineWidth] : [4, lineWidth, length]
+
   args.forEach(arg => {
     result.push(arg[0], arg[1])
   })
@@ -425,6 +422,11 @@ CSNF.prototype.bitmap = function (width, height, data) {
   result[3] = height / 0x100
   result.set(data, 4)
   return result
+}
+
+CSNF.prototype.rectangle = function (lineWidth, p, q, r, s) {
+  console.log('obsoleted - use polygon() instead of rectangle()')
+  return [2, lineWidth, p[0], p[1], q[0], q[1], r[0], r[1], s[0], s[1]]
 }
 
 CSNF.Bitmap = CSNFBitmap

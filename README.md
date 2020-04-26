@@ -47,8 +47,7 @@ page.addTextLayer([
 var w = 4
 page.addFrameLayer([
   csnf.line(w, p0, p2),
-  csnf.rectangle(w, p0, p1, p2, p3),
-  csnf.polygon(w, [291, 837], [184, 796], [235, 721], [314, 726], [331, 807])
+  csnf.polygon(w, p0, p1, p2, p3)
 ])
 
 await csnf.writeFile('test.csnf')
