@@ -1,6 +1,6 @@
 {
   "name": "csnf",
-  "version": "1.1.2",
+  "version": "1.1.4",
   "description": "a parser and generator for CLIP STUDIO name files.",
   "author": "funige <funigedev@gmail.com>",
   "dependencies": {
@@ -19,7 +19,7 @@
     "tape": "^4.13.2"
   },
   "scripts": {
-    "test": "standard && tape test/*.js"
+    "test": "standard . && tape test/*.js"
   },
   "bugs": {
     "url": "https://github.com/funige/csnf/issues"
