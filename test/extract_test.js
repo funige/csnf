@@ -1,13 +1,13 @@
-var test = require('tape')
-var tar = require('../tar-stream')
-var fixtures = require('./fixtures')
-var concat = require('concat-stream')
-var fs = require('fs')
+const test = require('tape')
+const tar = require('../tar-stream')
+const fixtures = require('./fixtures')
+const concat = require('concat-stream')
+const fs = require('fs')
 
 test('extract', function (t) {
   t.plan(4)
 
-  var extract = tar.extract()
+  const extract = tar.extract()
 
   extract.on('entry', function (header, stream, callback) {
     switch (header.name) {

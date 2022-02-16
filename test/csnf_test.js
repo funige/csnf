@@ -1,15 +1,15 @@
-var test = require('tape')
-var fixtures = require('./fixtures')
-var fs = require('fs')
-var CSNF = require('../csnf')
+const test = require('tape')
+const fixtures = require('./fixtures')
+const fs = require('fs')
+const CSNF = require('../csnf')
 
 test('layer test', async function (t) {
   t.plan(1)
 
-  var csnf = new CSNF()
-  var page = csnf.addPage()
+  const csnf = new CSNF()
+  const page = csnf.addPage()
 
-  var drawData = Uint8Array.of(
+  const drawData = Uint8Array.of(
     255, 255, 255, 255, 255, 255, 255, 255,
     255, 0, 0, 0, 0, 255, 255, 255,
     255, 0, 255, 255, 255, 0, 255, 255,
@@ -21,7 +21,7 @@ test('layer test', async function (t) {
   )
   page.addDrawLayer(csnf.bitmap(8, 8, drawData))
 
-  var noteData = Uint8Array.of(
+  const noteData = Uint8Array.of(
     255, 255, 255, 255, 255, 255, 255, 255,
     255, 0, 255, 255, 255, 255, 0, 255,
     255, 0, 0, 255, 255, 255, 0, 255,
@@ -33,29 +33,29 @@ test('layer test', async function (t) {
   )
   page.addNoteLayer(csnf.bitmap(8, 8, noteData))
 
-  var frame = csnf.baseframeRect()
-  var p0 = [frame.x, frame.y]
-  var p1 = [frame.x + frame.width, frame.y]
-  var p2 = [frame.x + frame.width, frame.y + frame.height]
-  var p3 = [frame.x, frame.y + frame.height]
+  const frame = csnf.baseframeRect()
+  const p0 = [frame.x, frame.y]
+  const p1 = [frame.x + frame.width, frame.y]
+  const p2 = [frame.x + frame.width, frame.y + frame.height]
+  const p3 = [frame.x, frame.y + frame.height]
 
-  var fontSize = 11
-  var vertical = true
+  const fontSize = 11
+  const vertical = true
   page.addTextLayer([
     csnf.text(p1, fontSize, vertical, 'vertical text')
   ])
 
-  var w = 4
+  const w = 4
   page.addFrameLayer([
     csnf.line(w, p0, p2),
     csnf.polygon(w, p0, p1, p2, p3),
     csnf.polygon(w, [291, 837], [184, 796], [235, 721], [314, 726], [331, 807])
   ])
 
-  var tmp = 'layer_test.csnf'
+  const tmp = 'layer_test.csnf'
   await csnf.writeFile(tmp)
 
-  var csnf2 = new CSNF()
+  const csnf2 = new CSNF()
   await csnf2.readFile(`test/fixtures/${tmp}`)
   t.deepEqual(csnf, csnf2.removeRawHeader())
 
@@ -65,18 +65,18 @@ test('layer test', async function (t) {
 test('slot test', async function (t) {
   t.plan(2)
 
-  var csnf = new CSNF()
-  var page = csnf.addPage()
+  const csnf = new CSNF()
+  const page = csnf.addPage()
 
   page.addTextLayer([csnf.text([100, 30], 11, false, 'test')])
   page.addTextLayer([csnf.text([200, 30], 11, false, 'test')], 1)
   page.addTextLayer([csnf.text([300, 30], 11, false, 'test')], 2)
 
   t.equal(page.layers.length, 3)
-  var tmp = 'slot_test.csnf'
+  const tmp = 'slot_test.csnf'
   await csnf.writeFile(tmp)
 
-  var csnf2 = new CSNF()
+  const csnf2 = new CSNF()
   await csnf2.readFile(`test/fixtures/${tmp}`)
   t.deepEqual(csnf, csnf2.removeRawHeader())
 
@@ -85,11 +85,11 @@ test('slot test', async function (t) {
 
 test('set template', function (t) {
   t.plan(5)
-  var b4 = new CSNF({ template: 'b4' })
-  var a4 = new CSNF({ template: 'a4' })
+  const b4 = new CSNF({ template: 'b4' })
+  const a4 = new CSNF({ template: 'a4' })
 
-  var csnf = new CSNF()
-  var csnf2 = new CSNF({
+  const csnf = new CSNF()
+  const csnf2 = new CSNF({
     sheetSize: [210, 297],
     finishingSize: [182, 257],
     baseframeSize: [150, 220]
@@ -105,7 +105,7 @@ test('set template', function (t) {
 test('set color', function (t) {
   t.plan(2)
 
-  var csnf = new CSNF({
+  const csnf = new CSNF({
     frameColor: ['#86ae00', '#00a000', 'black'],
     drawColor: '#0097d4'
   })
@@ -116,10 +116,10 @@ test('set color', function (t) {
 test('set bindRight and startpageRight', async function (t) {
   t.plan(11)
 
-  var csnf = new CSNF()
-  var p1 = 100
-  var p2 = 200
-  var p3 = 300
+  const csnf = new CSNF()
+  const p1 = 100
+  const p2 = 200
+  const p3 = 300
   csnf.addPage(p1)
   csnf.addPage(p2)
   csnf.addPage(p3)
@@ -147,7 +147,7 @@ test('set bindRight and startpageRight', async function (t) {
 test('convenient methods', function (t) {
   t.plan(9)
 
-  var csnf = new CSNF({ template: 'B4' })
+  const csnf = new CSNF({ template: 'B4' })
   t.deepEqual(
     csnf.sheetRect(),
     { x: 0, y: 0, width: 728, height: 1031 }
@@ -165,11 +165,11 @@ test('convenient methods', function (t) {
     [100, 200]
   )
 
-  var p = [100, 101]
-  var q = [200, 201]
-  var r = [300, 301]
-  var s = [400, 401]
-  var u = [500, 501]
+  const p = [100, 101]
+  const q = [200, 201]
+  const r = [300, 301]
+  const s = [400, 401]
+  const u = [500, 501]
   t.deepEqual(
     csnf.line(4, p, q),
     [1, 4, ...p, ...q]
@@ -195,20 +195,20 @@ test('convenient methods', function (t) {
 test('csnf read', async function (t) {
   t.plan(8)
 
-  var csnf = new CSNF()
+  const csnf = new CSNF()
   await csnf.readFile(fixtures.TEST_CSNF)
 
   t.equal(csnf.story.story_id, 1)
   t.equal(csnf.pages.length, 1)
   t.equal(csnf.pages[0].layers.length, 10)
 
-  var layer = csnf.pages[0].layers[0]
+  const layer = csnf.pages[0].layers[0]
   t.equal(layer.header.name, 'ly_f0_b')
   t.equal(layer.header.type, 'bitmap')
 
-  var bitmap = layer.data
-  var width = bitmap[0] + bitmap[1] * 0x100
-  var height = bitmap[2] + bitmap[3] * 0x100
+  const bitmap = layer.data
+  const width = bitmap[0] + bitmap[1] * 0x100
+  const height = bitmap[2] + bitmap[3] * 0x100
   t.equal(width, 728)
   t.equal(height, 1031)
   t.equal(width * height + 4, 750572)

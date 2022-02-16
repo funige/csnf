@@ -1,6 +1,6 @@
-var CSNFLayer = require('./layer')
+const CSNFLayer = require('./layer')
 
-var CSNFPage = function (pid) {
+const CSNFPage = function (pid) {
   this.pid = String(pid)
   this.layers = []
   return this
@@ -12,7 +12,7 @@ CSNFPage.prototype.addLayer = function (header, data) {
       throw new Error('Duplicated layer name')
     }
   })
-  var layer = new CSNFLayer(header, data)
+  const layer = new CSNFLayer(header, data)
   this.layers.push(layer)
   return layer
 }
@@ -33,7 +33,7 @@ CSNFPage.prototype.addTextLayer = function (data, slot = 0) {
   // Texts may not properly rendered
   // when number of texts is less than 2
   if (data.length < 2) {
-    var dummyText = data[0].map(item => (typeof item === 'string') ? '' : item)
+    const dummyText = data[0].map(item => (typeof item === 'string') ? '' : item)
     data.push(dummyText)
   }
   return this.addLayer({ type: 'text', name: `ly_t${slot}_t` }, data)

@@ -1,4 +1,4 @@
-var path = require('path')
+const path = require('path')
 
 exports.TEST_CSNF = path.join(__dirname, '1.csnf')
 exports.MIN_CSNF = path.join(__dirname, 'min.csnf')

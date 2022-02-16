@@ -1,7 +1,7 @@
-var CSNFHeader = function (rawHeader) {
+const CSNFHeader = function (rawHeader) {
   this.rawHeader = rawHeader
 
-  var arr = rawHeader.name.split('/')
+  const arr = rawHeader.name.split('/')
   if (arr.length < 2 || arr[0] !== '') throw new Error('invalid header')
 
   switch (arr.length) {

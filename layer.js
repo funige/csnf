@@ -1,4 +1,4 @@
-var CSNFLayer = function (header = {}, data) {
+const CSNFLayer = function (header = {}, data) {
   this.header = header
   this.data = data
 }

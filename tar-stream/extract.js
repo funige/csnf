@@ -1,24 +1,24 @@
-var util = require('util')
-var bl = require('bl')
-var headers = require('./headers')
+const util = require('util')
+const bl = require('bl')
+const headers = require('./headers')
 
-var Writable = require('readable-stream').Writable
-var PassThrough = require('readable-stream').PassThrough
+const Writable = require('readable-stream').Writable
+const PassThrough = require('readable-stream').PassThrough
 
-var noop = function () {}
+const noop = function () {}
 
-var overflow = function (size) {
+const overflow = function (size) {
   size &= 511
   return size && 512 - size
 }
 
-var emptyStream = function (self, offset) {
-  var s = new Source(self, offset)
+const emptyStream = function (self, offset) {
+  const s = new Source(self, offset)
   s.end()
   return s
 }
 
-var mixinPax = function (header, pax) {
+const mixinPax = function (header, pax) {
   if (pax.path) header.name = pax.path
   if (pax.linkpath) header.linkname = pax.linkpath
   if (pax.size) header.size = parseInt(pax.size, 10)
@@ -26,7 +26,7 @@ var mixinPax = function (header, pax) {
   return header
 }
 
-var Source = function (self, offset) {
+const Source = function (self, offset) {
   this._parent = self
   this.offset = offset
   PassThrough.call(this)
@@ -38,7 +38,7 @@ Source.prototype.destroy = function (err) {
   this._parent.destroy(err)
 }
 
-var Extract = function (opts) {
+const Extract = function (opts) {
   if (!(this instanceof Extract)) return new Extract(opts)
   Writable.call(this, opts)
 
@@ -60,65 +60,65 @@ var Extract = function (opts) {
   this._gnuLongPath = null
   this._gnuLongLinkPath = null
 
-  var self = this
-  var b = self._buffer
+  const self = this
+  const b = self._buffer
 
-  var oncontinue = function () {
+  const oncontinue = function () {
     self._continue()
   }
 
-  var onunlock = function (err) {
+  const onunlock = function (err) {
     self._locked = false
     if (err) return self.destroy(err)
     if (!self._stream) oncontinue()
   }
 
-  var onstreamend = function () {
+  const onstreamend = function () {
     self._stream = null
-    var drain = overflow(self._header.size)
+    const drain = overflow(self._header.size)
     if (drain) self._parse(drain, ondrain)
     else self._parse(512, onheader)
     if (!self._locked) oncontinue()
   }
 
-  var ondrain = function () {
+  const ondrain = function () {
     self._buffer.consume(overflow(self._header.size))
     self._parse(512, onheader)
     oncontinue()
   }
 
-  var onpaxglobalheader = function () {
-    var size = self._header.size
+  const onpaxglobalheader = function () {
+    const size = self._header.size
     self._paxGlobal = headers.decodePax(b.slice(0, size))
     b.consume(size)
     onstreamend()
   }
 
-  var onpaxheader = function () {
-    var size = self._header.size
+  const onpaxheader = function () {
+    const size = self._header.size
     self._pax = headers.decodePax(b.slice(0, size))
     if (self._paxGlobal) self._pax = Object.assign({}, self._paxGlobal, self._pax)
     b.consume(size)
     onstreamend()
   }
 
-  var ongnulongpath = function () {
-    var size = self._header.size
+  const ongnulongpath = function () {
+    const size = self._header.size
     this._gnuLongPath = headers.decodeLongPath(b.slice(0, size), opts.filenameEncoding)
     b.consume(size)
     onstreamend()
   }
 
-  var ongnulonglinkpath = function () {
-    var size = self._header.size
+  const ongnulonglinkpath = function () {
+    const size = self._header.size
     this._gnuLongLinkPath = headers.decodeLongPath(b.slice(0, size), opts.filenameEncoding)
     b.consume(size)
     onstreamend()
   }
 
-  var onheader = function () {
-    var offset = self._offset
-    var header
+  const onheader = function () {
+    const offset = self._offset
+    let header
     try {
       header = self._header = headers.decode(b.slice(0, 512), opts.filenameEncoding)
     } catch (err) {
@@ -207,7 +207,7 @@ Extract.prototype._parse = function (size, onparse) {
 
 Extract.prototype._continue = function () {
   if (this._destroyed) return
-  var cb = this._cb
+  const cb = this._cb
   this._cb = noop
   if (this._overflow) this._write(this._overflow, undefined, cb)
   else cb()
@@ -216,9 +216,9 @@ Extract.prototype._continue = function () {
 Extract.prototype._write = function (data, enc, cb) {
   if (this._destroyed) return
 
-  var s = this._stream
-  var b = this._buffer
-  var missing = this._missing
+  const s = this._stream
+  const b = this._buffer
+  const missing = this._missing
   if (data.length) this._partial = true
 
   // we do not reach end-of-chunk now. just forward it
@@ -236,7 +236,7 @@ Extract.prototype._write = function (data, enc, cb) {
   this._cb = cb
   this._missing = 0
 
-  var overflow = null
+  let overflow = null
   if (data.length > missing) {
     overflow = data.slice(missing)
     data = data.slice(0, missing)

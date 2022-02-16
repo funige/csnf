@@ -1,22 +1,22 @@
-var constants = require('fs-constants')
-var eos = require('end-of-stream')
-var inherits = require('inherits')
-var alloc = Buffer.alloc
+const constants = require('fs-constants')
+const eos = require('end-of-stream')
+const inherits = require('inherits')
+const alloc = Buffer.alloc
 
-var Readable = require('readable-stream').Readable
-var Writable = require('readable-stream').Writable
-var StringDecoder = require('string_decoder').StringDecoder
+const Readable = require('readable-stream').Readable
+const Writable = require('readable-stream').Writable
+const StringDecoder = require('string_decoder').StringDecoder
 
-var headers = require('./headers')
+const headers = require('./headers')
 
-var DMODE = parseInt('755', 8)
-var FMODE = parseInt('644', 8)
+const DMODE = parseInt('755', 8)
+const FMODE = parseInt('644', 8)
 
-var END_OF_TAR = alloc(1024)
+const END_OF_TAR = alloc(1024)
 
-var noop = function () {}
+const noop = function () {}
 
-var overflow = function (self, size) {
+const overflow = function (self, size) {
   size &= 511
   if (size) self.push(END_OF_TAR.slice(0, 512 - size))
 }
@@ -33,7 +33,7 @@ function modeToType (mode) {
   return 'file'
 }
 
-var Sink = function (to) {
+const Sink = function (to) {
   Writable.call(this)
   this.written = 0
   this._to = to
@@ -54,7 +54,7 @@ Sink.prototype.destroy = function () {
   this.emit('close')
 }
 
-var LinkSink = function () {
+const LinkSink = function () {
   Writable.call(this)
   this.linkname = ''
   this._decoder = new StringDecoder('utf-8')
@@ -74,7 +74,7 @@ LinkSink.prototype.destroy = function () {
   this.emit('close')
 }
 
-var Void = function () {
+const Void = function () {
   Writable.call(this)
   this._destroyed = false
 }
@@ -91,7 +91,7 @@ Void.prototype.destroy = function () {
   this.emit('close')
 }
 
-var Pack = function (opts) {
+const Pack = function (opts) {
   if (!(this instanceof Pack)) return new Pack(opts)
   Readable.call(this, opts)
 
@@ -115,7 +115,7 @@ Pack.prototype.entry = function (header, buffer, callback) {
 
   if (!callback) callback = noop
 
-  var self = this
+  const self = this
 
   if (!header.size || header.type === 'symlink') header.size = 0
   if (!header.type) header.type = modeToType(header.mode)
@@ -135,7 +135,7 @@ Pack.prototype.entry = function (header, buffer, callback) {
   }
 
   if (header.type === 'symlink' && !header.linkname) {
-    var linkSink = new LinkSink()
+    const linkSink = new LinkSink()
     eos(linkSink, function (err) {
       if (err) { // stream was closed
         self.destroy()
@@ -157,7 +157,7 @@ Pack.prototype.entry = function (header, buffer, callback) {
     return new Void()
   }
 
-  var sink = new Sink(this)
+  const sink = new Sink(this)
 
   this._stream = sink
 
@@ -205,7 +205,7 @@ Pack.prototype.destroy = function (err) {
 
 Pack.prototype._encode = function (header) {
   if (!header.pax) {
-    var buf = headers.encode(header)
+    const buf = headers.encode(header)
     if (buf) {
       this.push(buf)
       return
@@ -215,13 +215,13 @@ Pack.prototype._encode = function (header) {
 }
 
 Pack.prototype._encodePax = function (header) {
-  var paxHeader = headers.encodePax({
+  const paxHeader = headers.encodePax({
     name: header.name,
     linkname: header.linkname,
     pax: header.pax
   })
 
-  var newHeader = {
+  const newHeader = {
     name: 'PaxHeader',
     mode: header.mode,
     uid: header.uid,
@@ -246,7 +246,7 @@ Pack.prototype._encodePax = function (header) {
 }
 
 Pack.prototype._read = function (n) {
-  var drain = this._drain
+  const drain = this._drain
   this._drain = noop
   drain()
 }

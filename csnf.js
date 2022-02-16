@@ -1,15 +1,15 @@
-var tar = require('./tar-stream')
-var concat = require('concat-stream')
-var util = require('util')
-var events = require('events')
-var color = require('color-parse')
-var maxPID = 0
+const tar = require('./tar-stream')
+const concat = require('concat-stream')
+const util = require('util')
+const events = require('events')
+const color = require('color-parse')
+let maxPID = 0
 
-var CSNFHeader = require('./header')
-var CSNFBitmap = require('./bitmap')
-var CSNFPage = require('./page')
+const CSNFHeader = require('./header')
+const CSNFBitmap = require('./bitmap')
+const CSNFPage = require('./page')
 
-var CSNF = function (opts = {}) {
+const CSNF = function (opts = {}) {
   this.pages = []
   this.initStory(opts)
 }
@@ -17,7 +17,7 @@ var CSNF = function (opts = {}) {
 util.inherits(CSNF, events.EventEmitter)
 
 CSNF.prototype.addPage = function (pid) {
-  var page = new CSNFPage(pid || this.generatePID())
+  const page = new CSNFPage(pid || this.generatePID())
   this.pages.push(page)
 
   this.updatePageinfo()
@@ -35,12 +35,12 @@ CSNF.prototype.generatePID = function () {
 
 CSNF.prototype.read = function (data) {
   return new Promise(resolve => {
-    var extract = tar.extract()
-    var currentPage = null
+    const extract = tar.extract()
+    let currentPage = null
 
     extract.on('entry', (rawHeader, stream, callback) => {
-      var header = new CSNFHeader(rawHeader)
-      var wait = false
+      const header = new CSNFHeader(rawHeader)
+      let wait = false
 
       stream.pipe(concat((rawData) => {
         if (header.isLayer()) {
@@ -49,7 +49,7 @@ CSNF.prototype.read = function (data) {
           }
         }
 
-        var layer
+        let layer
         switch (header.type) {
           case 'root':
             break
@@ -94,7 +94,7 @@ CSNF.prototype.read = function (data) {
 }
 
 CSNF.prototype.readFile = async function (path) {
-  var fs = require('fs')
+  const fs = require('fs')
   await this.read(fs.readFileSync(path))
 }
 
@@ -103,7 +103,7 @@ CSNF.prototype.write = async function (format) {
     throw new Error('No page data')
   }
 
-  var pack = tar.pack()
+  const pack = tar.pack()
   pack.entry({
     name: `/${this.story.story_id}`,
     type: 'directory'
@@ -114,8 +114,8 @@ CSNF.prototype.write = async function (format) {
     type: 'file'
   }, JSON.stringify({ body: this.story }))
 
-  for (var page of this.pages) {
-    var pid = page.pid
+  for (const page of this.pages) {
+    const pid = page.pid
     if (pid > 0) {
       pack.entry({
         name: `/${this.story.story_id}/${pid}`,
@@ -123,7 +123,7 @@ CSNF.prototype.write = async function (format) {
       })
       this.emit('page', page)
 
-      for (var layer of page.layers) {
+      for (const layer of page.layers) {
         pack.entry({
           name: `/${this.story.story_id}/${pid}/${layer.header.name}`,
           type: 'file'
@@ -133,7 +133,7 @@ CSNF.prototype.write = async function (format) {
     }
   }
   pack.finalize()
-  var data = await new Promise((resolve, reject) => {
+  const data = await new Promise((resolve, reject) => {
     pack.pipe(concat((data) => {
       resolve(data)
     }))
@@ -143,12 +143,12 @@ CSNF.prototype.write = async function (format) {
 }
 
 CSNF.prototype.writeFile = async function (path) {
-  var fs = require('fs')
+  const fs = require('fs')
   fs.writeFileSync(path, await this.write())
 }
 
 CSNF.prototype.packData = async function (layer) {
-  var data
+  let data
   switch (layer.header.type) {
     case 'shape':
     case 'text':
@@ -172,29 +172,29 @@ CSNF.prototype.packData = async function (layer) {
 }
 
 CSNF.prototype.updatePageinfo = function () {
-  var tmp = []
-  var info = []
+  const tmp = []
+  const info = []
 
-  var startBlank = (this.story.startpage_right !== this.story.bind_right)
+  const startBlank = (this.story.startpage_right !== this.story.bind_right)
   if (startBlank) {
     tmp.push(null)
   }
-  for (var page of this.pages) {
+  for (const page of this.pages) {
     tmp.push(page)
   }
   if (tmp.length % 2) {
     tmp.push(null)
   }
 
-  var count = 1
+  let count = 1
   while (tmp.length > 0) {
-    var page0 = tmp.shift()
-    var page1 = tmp.shift()
+    const page0 = tmp.shift()
+    const page1 = tmp.shift()
 
-    var p0 = page0 ? parseInt(page0.pid) : 0
-    var p1 = page1 ? parseInt(page1.pid) : 0
-    var i0 = page0 ? count++ : 0
-    var i1 = page1 ? count++ : 0
+    const p0 = page0 ? parseInt(page0.pid) : 0
+    const p1 = page1 ? parseInt(page1.pid) : 0
+    const i0 = page0 ? count++ : 0
+    const i1 = page1 ? count++ : 0
 
     if (this.story.bind_right) {
       info.push([0, i1, p1, i0, p0])
@@ -226,7 +226,7 @@ CSNF.prototype.initStory = function (opts) {
 
   this.setTemplate(opts.template || 'B4')
 
-  for (var key in opts) {
+  for (const key in opts) {
     switch (key) {
       case 'template':
       case 'bindRight':
@@ -240,8 +240,10 @@ CSNF.prototype.initStory = function (opts) {
       case 'drawColor':
       case 'textColor':
       case 'noteColor':
-        var handler = 'set' + key.charAt(0).toUpperCase() + key.slice(1)
-        this[handler](opts[key])
+        {
+          const handler = 'set' + key.charAt(0).toUpperCase() + key.slice(1)
+          this[handler](opts[key])
+        }
         break
 
       case 'dpi':
@@ -275,11 +277,11 @@ CSNF.prototype.setColor = function (value, index) {
     value = [value]
   }
   this.story.layer_color[index] = value.map(item => {
-    var rgb = color(item)
+    const rgb = color(item)
     if (rgb.values) {
-      var r = ('0' + rgb.values[0].toString(16)).slice(-2)
-      var g = ('0' + rgb.values[1].toString(16)).slice(-2)
-      var b = ('0' + rgb.values[2].toString(16)).slice(-2)
+      const r = ('0' + rgb.values[0].toString(16)).slice(-2)
+      const g = ('0' + rgb.values[1].toString(16)).slice(-2)
+      const b = ('0' + rgb.values[2].toString(16)).slice(-2)
       return parseInt('0x' + r + g + b) - 0x1000000
     } else throw new Error('Unknown color format')
   })
@@ -348,29 +350,29 @@ CSNF.prototype.setStartpageRight = function (value) {
 // convenient methods
 
 CSNF.prototype.sheetRect = function () {
-  var sheet = this.mm2px(this.story.sheet_size)
+  const sheet = this.mm2px(this.story.sheet_size)
   return { x: 0, y: 0, width: sheet[0], height: sheet[1] }
 }
 
 CSNF.prototype.finishingRect = function () {
-  var sheet = this.mm2px(this.story.sheet_size)
-  var finishing = this.mm2px(this.story.finishing_size)
-  var left = (sheet[0] - finishing[0]) / 2
-  var top = (sheet[1] - finishing[1]) / 2
+  const sheet = this.mm2px(this.story.sheet_size)
+  const finishing = this.mm2px(this.story.finishing_size)
+  const left = (sheet[0] - finishing[0]) / 2
+  const top = (sheet[1] - finishing[1]) / 2
   return { x: left, y: top, width: finishing[0], height: finishing[1] }
 }
 
 CSNF.prototype.baseframeRect = function () {
-  var sheet = this.mm2px(this.story.sheet_size)
-  var baseframe = this.mm2px(this.story.baseframe_size)
-  var left = (sheet[0] - baseframe[0]) / 2
-  var top = (sheet[1] - baseframe[1]) / 2
+  const sheet = this.mm2px(this.story.sheet_size)
+  const baseframe = this.mm2px(this.story.baseframe_size)
+  const left = (sheet[0] - baseframe[0]) / 2
+  const top = (sheet[1] - baseframe[1]) / 2
   return { x: left, y: top, width: baseframe[0], height: baseframe[1] }
 }
 
 CSNF.prototype.removeRawHeader = function () {
-  for (var page of this.pages) {
-    for (var layer of page.layers) {
+  for (const page of this.pages) {
+    for (const layer of page.layers) {
       if (layer.header.rawHeader) {
         delete layer.header.rawHeader
         delete layer.header.pid
@@ -395,8 +397,8 @@ CSNF.prototype.px2mm = function (px) {
 }
 
 CSNF.prototype.text = function (p, fontSize, vertical, str, flag = 0) {
-  var f1 = 0
-  var f2 = flag & (this.BOLD | this.ITALIC)
+  const f1 = 0
+  const f2 = flag & (this.BOLD | this.ITALIC)
   return [5, p[0], p[1], fontSize, f1, f2, vertical, str]
 }
 
@@ -405,8 +407,8 @@ CSNF.prototype.line = function (lineWidth, p, q) {
 }
 
 CSNF.prototype.polygon = function (lineWidth, ...args) {
-  var length = args.length
-  var result = (length === 4) ? [2, lineWidth] : [4, lineWidth, length]
+  const length = args.length
+  const result = (length === 4) ? [2, lineWidth] : [4, lineWidth, length]
 
   args.forEach(arg => {
     result.push(arg[0], arg[1])
@@ -415,7 +417,7 @@ CSNF.prototype.polygon = function (lineWidth, ...args) {
 }
 
 CSNF.prototype.bitmap = function (width, height, data) {
-  var result = new Uint8Array(data.length + 4)
+  const result = new Uint8Array(data.length + 4)
   result[0] = width % 0x100
   result[1] = width / 0x100
   result[2] = height % 0x100

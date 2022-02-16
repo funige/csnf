@@ -1,13 +1,13 @@
-var test = require('tape')
-var tar = require('../tar-stream')
-var fixtures = require('./fixtures')
-var concat = require('concat-stream')
-var fs = require('fs')
+const test = require('tape')
+const tar = require('../tar-stream')
+const fixtures = require('./fixtures')
+const concat = require('concat-stream')
+const fs = require('fs')
 
 test('pack', function (t) {
   t.plan(2)
 
-  var pack = tar.pack()
+  const pack = tar.pack()
 
   pack.entry({
     name: '/1',

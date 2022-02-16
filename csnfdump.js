@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-var program = require('commander')
-var CSNF = require('./csnf')
+const program = require('commander')
+const CSNF = require('./csnf')
 
-var _action = async function (file, filter) {
+const _action = async function (file, filter) {
   if (program.info) {
     return _info(file)
   } else {
@@ -10,17 +10,17 @@ var _action = async function (file, filter) {
   }
 }
 
-var _dump = async function (file, filter) {
-  var csnf = new CSNF()
+const _dump = async function (file, filter) {
+  const csnf = new CSNF()
   csnf.readFile(file).then(() => {
-    for (var i = 0; i < csnf.story.page_count; i++) {
-      var page = csnf.pages[i]
-      var pid = page.pid
+    for (let i = 0; i < csnf.story.page_count; i++) {
+      const page = csnf.pages[i]
+      const pid = page.pid
 
       if (pid <= 0) continue
       if (program.page && parseInt(program.page) !== (i - 1)) continue
 
-      var layers = page.layers
+      const layers = page.layers
       layers.forEach((layer) => {
         if (!filter || layer.header.name.match(filter)) {
           console.log(`/${csnf.story.story_id}/${pid}/${layer.header.name}`)
@@ -49,10 +49,10 @@ var _dump = async function (file, filter) {
   })
 }
 
-var _info = function (file) {
-  var csnf = new CSNF()
+const _info = function (file) {
+  const csnf = new CSNF()
   csnf.readFile(file).then(() => {
-    var story = csnf.story
+    const story = csnf.story
 
     console.log('title:', story.title)
     console.log('author:', story.author)

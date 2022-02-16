@@ -1,30 +1,30 @@
 #!/usr/bin/env node
-var program = require('commander')
-var CSNF = require('./csnf')
-var fs = require('fs')
+const program = require('commander')
+const CSNF = require('./csnf')
+const fs = require('fs')
 
-var _action = async function (file) {
-  var csnf = new CSNF({
+const _action = async function (file) {
+  const csnf = new CSNF({
     template: program.template,
     bindRight: !!program.bind.match(/right/i),
     startpageRight: !!program.startpage.match(/right/i)
   })
 
   _getTexts(file).forEach((text) => {
-    var page = csnf.addPage()
-    var rect = csnf.finishingRect()
-    var x = rect.x + rect.width
-    var y = rect.y
-    var fontSize = parseInt(program.fontsize)
+    const page = csnf.addPage()
+    const rect = csnf.finishingRect()
+    let x = rect.x + rect.width
+    const y = rect.y
+    const fontSize = parseInt(program.fontsize)
 
-    var shapes = []
-    for (var item of text) {
+    const shapes = []
+    for (const item of text) {
       if (item !== '') {
-        var tmp = item.split('\n')
-        var ymax = Math.max(...tmp.map((item) => item.length)) * fontSize
-        var xmax = tmp.length * fontSize
+        const tmp = item.split('\n')
+        const ymax = Math.max(...tmp.map((item) => item.length)) * fontSize
+        const xmax = tmp.length * fontSize
 
-        var pos = [x - (xmax / 2), y + (ymax / 2)]
+        const pos = [x - (xmax / 2), y + (ymax / 2)]
         shapes.push(csnf.text(pos, fontSize, 0, 0, true, item))
         x -= (xmax + fontSize)
       }
@@ -41,12 +41,12 @@ var _action = async function (file) {
 // 1 blank line to new item
 // 2 blank lines to new page
 
-var _getTexts = function (file) {
-  var texts = fs.readFileSync(file).toString().replace(/\r?\n/g, '\n')
+const _getTexts = function (file) {
+  let texts = fs.readFileSync(file).toString().replace(/\r?\n/g, '\n')
   console.log(file)
 
   if (program.comment) {
-    var regexp = new RegExp('^' + program.comment)
+    const regexp = new RegExp('^' + program.comment)
     texts = texts.split('\n').filter(line => !line.match(regexp)).join('\n')
   }
   return texts
