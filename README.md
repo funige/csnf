@@ -4,8 +4,9 @@ csnf is a parser and generator for CSNF (CLIP STUDIO name files).
 ```
 npm install csnf
 ```
-
+<!--
 [![build status](https://secure.travis-ci.org/funige/csnf.png)](http://travis-ci.org/funige/csnf)
+-->
 [![npm version](https://badge.fury.io/js/csnf.svg)](https://badge.fury.io/js/csnf)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
