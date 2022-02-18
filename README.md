@@ -12,15 +12,15 @@ npm install csnf
 ## Usage
 
 ``` js
-var CSNF = require('csnf')
+const CSNF = require('csnf')
 
-var csnf = new CSNF({ template: 'B4' })
-var page = csnf.addPage()
+const csnf = new CSNF({ template: 'B4' })
+const page = csnf.addPage()
 
 // CSNF has 4 layer types (Frame, Draw, Text, Note),
 // each type allows up to 3 layers.
 
-var drawData = Uint8Array.of(
+const drawData = Uint8Array.of(
   255, 255, 255, 255, 255, 255, 255, 255,
   255, 0, 0, 0, 0, 255, 255, 255,
   255, 0, 255, 255, 255, 0, 255, 255,
@@ -32,19 +32,19 @@ var drawData = Uint8Array.of(
 )
 page.addDrawLayer(csnf.bitmap(8, 8, drawData))
 
-var rect = csnf.baseframeRect()
-var p0 = [rect.x, rect.y]
-var p1 = [rect.x + rect.width, rect.y]
-var p2 = [rect.x + rect.width, rect.y + rect.height]
-var p3 = [rect.x, rect.y + rect.height]
+const rect = csnf.baseframeRect()
+const p0 = [rect.x, rect.y]
+const p1 = [rect.x + rect.width, rect.y]
+const p2 = [rect.x + rect.width, rect.y + rect.height]
+const p3 = [rect.x, rect.y + rect.height]
 
-var fontSize = 11
-var vertical = true
+const fontSize = 11
+const vertical = true
 page.addTextLayer([
   csnf.text(p1, fontSize, vertical, 'vertical\ntext')
 ])
 
-var w = 4
+const w = 4
 page.addFrameLayer([
   csnf.line(w, p0, p2),
   csnf.polygon(w, p0, p1, p2, p3)
